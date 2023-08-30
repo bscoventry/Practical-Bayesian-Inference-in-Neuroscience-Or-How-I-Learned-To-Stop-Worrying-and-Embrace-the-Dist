@@ -1,4 +1,4 @@
-# BayesianNeuralAnalysis
+# Practical Bayesian Inference in Neuroscience: Or How I Learned To Stop Worrying and Embrace Probability
 This repository is a supplement to Coventry and Bartlett's tutorial on using Bayesian methods in neuroscience studies using PyMC.
 
 # OS recommendations
