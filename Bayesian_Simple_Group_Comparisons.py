@@ -4,7 +4,7 @@
 # Purpose: This program isn't discussed in the paper, but is a demo showing how we can simply compare groups without fancy ANOVAs. Care should
 #          be taken though in posterior checks as these are subject to Type M and Type S errors due to lack of hierarchical structure offered 
 #          in BANOVAs
-# Revision Hist: See Github
+# Revision Hist: See Github for rollback
 """
 To begin, let's import all of our dependencies, including our data and python packages
 """

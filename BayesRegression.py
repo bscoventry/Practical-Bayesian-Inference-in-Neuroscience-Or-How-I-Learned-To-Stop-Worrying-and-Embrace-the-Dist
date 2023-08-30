@@ -3,7 +3,7 @@
 # Date: 08-17-2022
 # Purpose: This calculates a simple linear regression (Bayesian Formulation) on auditory evoked data with modulation of amplitude
 #          modulated depth. Use this as a tutorial for simple linear regression for neural data
-# Revision History: N/A
+# Revision History: See Github for Rollback
 # Notes: PDB is added in to debug code at your leasure. Add pdb.set_trace() anywhere in line to create a break point to explore 
 # variables. We highly recommend doing this to explore the code to get a good feel for it.
 #-------------------------------------------------------------------------------------------------------------------------------------

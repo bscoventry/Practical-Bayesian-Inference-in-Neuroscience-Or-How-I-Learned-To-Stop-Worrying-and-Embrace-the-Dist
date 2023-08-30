@@ -2,7 +2,7 @@
 #Author: Brandon S Coventry
 # Date: 08/23/2022
 # Purpose: This program is a modified port of my previous heirarchical linear regression programs, updated for pymc (v4)
-# Revision History: Based on Code I used for my dissertation. This is the release version
+# Revision History: Based on Code I used for my dissertation. This is the release version. See github for rollback
 # Dependencies: PyMC as well as all PyMC dependencies.
 # References: Gelman et al, 2021: http://www.stat.columbia.edu/~gelman/book/BDA3.pdf
 #             Kruske Doing Bayesian Data Analysis Text

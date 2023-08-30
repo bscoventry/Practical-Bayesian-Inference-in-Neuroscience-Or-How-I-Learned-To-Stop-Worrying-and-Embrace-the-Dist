@@ -1,3 +1,9 @@
+#--------------------------------------------------------------------------------------------------------------------------
+# Author: Brandon S Coventry, Ph.D.            Wisconsin Institute for Translational Neuroengineering
+# Date: 06/23
+# Purpose: This implements general BANOVA like structures, in particular BANCOVA.
+# Revision History: See Github
+#--------------------------------------------------------------------------------------------------------------------------
 import numpy as np               #Numpy for numerical 'ala Matlab' computations
 import pymc as pm                #pymc will be doing most of our heavy lifting for Bayesian calculations
 import matplotlib.pyplot as plt  #This works as our plotting tool
