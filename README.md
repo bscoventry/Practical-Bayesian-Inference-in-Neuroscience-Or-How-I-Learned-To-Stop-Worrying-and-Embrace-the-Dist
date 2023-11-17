@@ -1,4 +1,4 @@
-# Practical Bayesian Inference in Neuroscience: Or How I Learned To Stop Worrying and Embrace Probability
+# Practical Bayesian Inference in Neuroscience: Or How I Learned To Stop Worrying and Embrace the Distribution
 This repository is a supplement to Coventry and Bartlett's tutorial on using Bayesian methods in neuroscience studies using PyMC.
 ![alt text](https://github.com/bscoventry/BayesianNeuralAnalysis/blob/main/BayesSplanation.jpg?raw=true)
 
