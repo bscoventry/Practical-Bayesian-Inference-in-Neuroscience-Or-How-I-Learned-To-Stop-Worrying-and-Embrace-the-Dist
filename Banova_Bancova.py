@@ -1,9 +1,3 @@
-#--------------------------------------------------------------------------------------------------------------------------
-# Author: Brandon S Coventry, Ph.D.            Wisconsin Institute for Translational Neuroengineering
-# Date: 06/23
-# Purpose: This implements general BANOVA like structures, in particular BANCOVA.
-# Revision History: See Github
-#--------------------------------------------------------------------------------------------------------------------------
 import numpy as np               #Numpy for numerical 'ala Matlab' computations
 import pymc as pm                #pymc will be doing most of our heavy lifting for Bayesian calculations
 import matplotlib.pyplot as plt  #This works as our plotting tool
@@ -49,7 +43,7 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
     #Grab age class. In this data set, Age is already cast to encoded integers. 1 is aged, 2 is young.
     ageNum = AMDepthData['Age'].astype(aesara.config.floatX)
     
-    age = ageNum - 1               #0 and 1s instead of 1 and 2 for categories. Because computer science and we like computer science
+    age = ageNum - 1               #0 and 1s instead of 1 and 2 for categories. Because computer science and we like computer science. 0 Aged, 1 Young
     numCategories = 2
     #The following two lines adds a category option of age to the dataframe. This is because we've built this to use Categories, and I want to demonstrate how to easily cast objects to this type
     #If the data being used already isn't in this form.
@@ -105,8 +99,8 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
     fg = sns.FacetGrid(AMDepthData, col='AgeClass', despine=False)
     fg.map(plt.scatter, 'LogModDepth', 'TotMean', facecolor='none', edgecolor='b')
     #Grab our Beta posteriors for young and age classes respectively. 
-    bScaledAge = trace.posterior['bScaled'][:,:,0]
-    bScaledYoung = trace.posterior['bScaled'][:,:,1]
+    bScaledAge = trace.posterior['bScaled'][:,:,1]
+    bScaledYoung = trace.posterior['bScaled'][:,:,0]
     #np.shape(trace)                             #Uncomment this line if you want to see the overall structure of the trace. Good for diagnostics
     aTrace = trace.posterior['aScaled']
     
@@ -115,7 +109,7 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
     scale = trace.posterior['sigmaLikelihood']
     
     #We perform inference over the contrasts between groups. In this case lets look at differences between aged and young classes.
-    yVa = bScaledAge-bScaledYoung              #Difference calculation
+    yVa = bScaledYoung - bScaledAge             #Difference calculation
     effectSize = yVa/scale      #Get the effect size
 
     #Plot differences
