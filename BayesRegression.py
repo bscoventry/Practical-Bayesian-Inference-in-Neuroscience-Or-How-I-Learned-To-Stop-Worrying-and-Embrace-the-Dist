@@ -23,7 +23,7 @@ import pdb
 if __name__ == '__main__':       #This statement is to allow for parallel sampling in windows. Linux distributions don't require this. Doesn't hurt Linux to have this either.
     print(f"Running on PyMC v{pm.__version__}")      #Tells us which version of PyMC we are running
     AMDepthData = pd.read_csv("depthData.csv")      #Read in our data. Note this address may change based on where program files are downloaded.
-    data1 = AMDepthData.loc[AMDepthData['Age'] == 1]                   #Let's consider young responses first.
+    data1 = AMDepthData.loc[AMDepthData['Age'] == 2]                   #Let's consider young responses first.
     data1.reset_index(drop=True, inplace = True)
     AMDepthData = data1
     """
@@ -51,7 +51,7 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
     modDepth = AMDepthData.ModDepth                     #This is our modulation depth vector
     firingRate = AMDepthData['TotMean']                 #This is our mean firing rate. Note, data can be accessed in a pandas array using dot notation (data.subsetData) or
     
-    firingRate = np.log(firingRate+0.1)
+    firingRate = np.log(firingRate+0.01)
                                                         #Index like data['subsetData']
     firingRate = firingRate.astype(aesara.config.floatX) #Make sure response variable is in a tensor like structure for computaiton. This is the only time we need to directly invoke aesara
     modDepth = np.asarray(modDepth)                     #Make sure Xs are not panda series, aesara is not a fan of those sometimes.
@@ -125,6 +125,8 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
         fill_kwargs={"alpha": 0.25},
         smooth=False,
     )
+    az.plot_energy(trace)
+    az.plot_trace(trace)
     plt.show()
     #pdb.set_trace()
     """
@@ -140,4 +142,3 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
     az.plot_ppc(ppcRegression)
     az.plot_trace(trace,var_names=['a', 'B','eps'])
     plt.show()
-   
