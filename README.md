@@ -32,6 +32,12 @@ pip install matplotlib
 ```
 This installs PyMC and all required packages individually. Alternatively, pip installations can be groups as "pip install scipy,numpy,..."
 
+To run DBS LFP models, install the following packages:
+```python
+pip install tabulate
+pip install docopt
+```
+
 # Running sample programs
 We recommend creating a new directory on your machine to download all programs and data to. To run programs, activate the PyMC environment and navigate to the code/data directory as:
 ```python
