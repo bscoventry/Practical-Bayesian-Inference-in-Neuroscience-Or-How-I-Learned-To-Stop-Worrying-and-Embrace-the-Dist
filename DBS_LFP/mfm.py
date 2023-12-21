@@ -148,7 +148,7 @@ class MFM(object):
                          
     def _set_MFM_params(self):
         self.phin = 15
-        self.noiseAmp = 0.03
+        self.noiseAmp = 0.05
         self.re = 80 #mm
         self.gammae = 125 #s^-1
         self.alpha = 160 #s^-1
