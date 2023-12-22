@@ -46,7 +46,7 @@ if __name__ == '__main__':
         #compiled_model = nutpie.compile_pymc_model(best)
         #trace = nutpie.sample(compiled_model,tune=2000,draws=2000,chains=4,target_accept=0.90)
         with best:
-            trace = pm.sample(2000, tune=500, target_accept=0.90,chains = 4)
+            trace = pm.sample(2000, nuts_sampler="numpyro", tune=500, target_accept=0.90,chains = 4)
         
         diff_of_means_hdi =  az.hdi(trace.posterior, var_names=["difference of means"],hdi_prob=0.95) 
         diff_of_means_hdi  =  diff_of_means_hdi['difference of means'].data
@@ -76,8 +76,9 @@ if __name__ == '__main__':
     ttestTotal = []
     BestTotal = []
     for ck in range(2,numComparisons,5):
-        
+        BetaStim = np.random.permutation(BetaStim)
         betaStimCur = BetaStim[0:ck]
+        BetaNoStim = np.random.permutation(BetaNoStim)
         betaNoStimCur = BetaNoStim[0:ck]
         Result,MAPest = BEST(betaStimCur,betaNoStimCur)  
         bestMap.append(MAPest)
@@ -95,7 +96,7 @@ if __name__ == '__main__':
         ttestTotal.append(ttestcounter)
         print(ck)
     pdb.set_trace()
-    Ns = range(2,numComparisons)
+    Ns = range(2,numComparisons,5)
     plt.plot(Ns,BestTotal)
     plt.plot(Ns,ttestTotal)
     plt.show()
