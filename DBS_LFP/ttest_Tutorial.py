@@ -13,6 +13,7 @@ import arviz as az
 import pdb
 import pickle as pl
 from scipy.stats import mode
+import nutpie
 #Let's define the Bayesian Estimates Supersedes the T-Test (BEST) model.
 if __name__ == '__main__':
     def BEST(group_1,group_2):
@@ -42,14 +43,17 @@ if __name__ == '__main__':
             diff_of_means = pm.Deterministic("difference of means", group1_mean - group2_mean)
             diff_of_stds = pm.Deterministic("difference of stds", group1_std - group2_std)
             effect_size = pm.Deterministic("effect size", diff_of_means / np.sqrt((group1_std ** 2 + group2_std ** 2) / 2))
+        #compiled_model = nutpie.compile_pymc_model(best)
+        #trace = nutpie.sample(compiled_model,tune=2000,draws=2000,chains=4,target_accept=0.90)
         with best:
-            trace = pm.sample(2000, tune=2000, target_accept=0.90,chains = 4)
+            trace = pm.sample(2000, tune=500, target_accept=0.90,chains = 4)
         
         diff_of_means_hdi =  az.hdi(trace.posterior, var_names=["difference of means"],hdi_prob=0.95) 
         diff_of_means_hdi  =  diff_of_means_hdi['difference of means'].data
         dataSummary = az.summary(trace.posterior,var_names=["difference of means"],hdi_prob=0.95)
         gatherChains = np.squeeze(np.reshape(trace.posterior['difference of means'].data,(1,2000*4)))
-        MAPest = mode(gatherChains)[0][0]
+        
+        MAPest = mode(gatherChains)[0]#[0]
         
         if diff_of_means_hdi[0] < 0 <= diff_of_means_hdi[1]:
             acceptNull = True
