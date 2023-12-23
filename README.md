@@ -20,8 +20,8 @@ conda activate PyMC
 # Installing PyMC and required packages
 To install PyMC, first activate a PyMC environment. Then run:
 ```python
-conda install numpyro
-conda install PyMC
+conda install -c conda-forge "pymc>=5"
+conda install -c conda-forge numpyro
 pip install arviz
 pip install aesara
 pip install numpy
@@ -36,6 +36,7 @@ To run DBS LFP models, install the following packages:
 ```python
 pip install tabulate
 pip install docopt
+pip install nutpie
 ```
 
 # Running sample programs
