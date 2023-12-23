@@ -10,9 +10,9 @@ import pdb
 #Keywards to set up models
 kwargsDBS = {                        #Dopamine depleted, continuous DBS, 100us pulsewidth
         'cDBS': True,
-        'cDBS_amp': 0.01,
+        'cDBS_amp': 0.01,   #1.8 if doing driven responses
         'cDBS_f': 130,
-        'cDBS_width': 100,
+        'cDBS_width': 100,  #240 if doing driven responses 
         'DD' : True,
         'verbose' : False,
         'tstop'   : 15 
@@ -27,7 +27,7 @@ kwargsStimless = {                    #Dopamine depleted, no stim
 DBS_LFP = MFM(**kwargsDBS)                        #Model that contains subthreshold DBS, ie should be identical in a PD model to no stim
 Stimless_LFP = MFM(**kwargsStimless)                   #Model that recieves no stimulation whatsoever
 # Let's setup some data generating parameters
-numtrials = 2000                       #Number of trials to run the model.
+numtrials = 2000                     #Number of trials to run the model.
 BetaPower_NoStim = np.zeros((numtrials,))
 BetaPower_Stim = np.zeros((numtrials,))
 #Some helpful defs here to calculate beta band power
