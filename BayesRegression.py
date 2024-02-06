@@ -64,6 +64,9 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
     #Plot the distribution of response variable, firing rate
     sns.displot(firingRate, kde=True)
     plt.show()
+    #Create a distribution plot of the data.
+    sns.violinplot(x=modDepth, y=firingRate, split=True)
+    plt.show()
     """
     Okay great, the distribution looks somewhat normally distributed. Let's carry on
     """
@@ -114,7 +117,8 @@ if __name__ == '__main__':       #This statement is to allow for parallel sampli
     ylabel=r"Firing Rate",
     title="Posterior predictive regression lines",
     )
-    sc = ax.scatter(modDepth, firingRate)
+    #sc = ax.scatter(modDepth, firingRate)
+    sc = sns.violinplot(x=modDepth, y=firingRate, split=True)
     #Plot posterior HDIs
     az.plot_hdi(
         modDepth,
