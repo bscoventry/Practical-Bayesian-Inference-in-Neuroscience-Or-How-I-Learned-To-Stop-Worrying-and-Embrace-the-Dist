@@ -54,4 +54,4 @@ Programs will run and give diagnostics in the anaconda terminal and show plots f
 
 # Where do I find the data?
 Data for Bayesian linear regressions, comparisons of models, and BANOVA/BANCOVAs are found at the following open science framework link:
-Data for Bayesian Multilinear regressions can be found at its papers open science framework repository:
+Data for Bayesian Multilinear regressions can be found at its papers open science framework repository: DOI 10.17605/OSF.IO/W4UFH
