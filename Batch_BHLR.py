@@ -313,7 +313,8 @@ hyperprior_sigma_range = [1] #, 0.5, 5, 10]     # Range of mu for generating the
 """
 Initial building and testing of the BHLR models
 """ 
-from BHLR import BHLR
+#Import needed only if BHLR is in a different directory. Placed inline to facilitate code readability for this tutorial.
+#from BHLR import BHLR
 #This is an example of doing sensitivity analysis by varying hyperprior distributions
 model = 'Mixture'
 for band_z  in all_z:
