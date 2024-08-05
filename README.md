@@ -55,3 +55,7 @@ Programs will run and give diagnostics in the anaconda terminal and show plots f
 # Where do I find the data?
 Data for Bayesian linear regressions, comparisons of models, and BANOVA/BANCOVAs are found at the following open science framework link:
 Data for Bayesian Multilinear regressions can be found at its papers open science framework repository: DOI 10.17605/OSF.IO/W4UFH
+
+# Batch Processing
+For an example of running models in batches, see batch_BHLR.py which does a sensitivity sweep. To keep things simple, this is a simple loop function. More fancy MPI based processes can be done. However,
+this would take a good amount of work to work between threads already used by PyMC. This should run plenty fast as is.
