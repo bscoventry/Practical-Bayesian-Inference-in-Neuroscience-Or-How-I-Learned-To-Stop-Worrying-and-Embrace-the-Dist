@@ -22,6 +22,7 @@ To install PyMC, first activate a PyMC environment. Then run:
 ```python
 conda install -c conda-forge "pymc>=5"
 conda install -c conda-forge numpyro
+conda install m2w64-toolchain
 pip install arviz
 pip install aesara
 pip install numpy
