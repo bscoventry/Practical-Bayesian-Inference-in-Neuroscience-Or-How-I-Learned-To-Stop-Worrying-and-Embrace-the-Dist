@@ -9,6 +9,7 @@ import pandas as pd
 from patsy import dmatrix
 import pdb
 import scipy.io as sio
+from scipy import stats
 if __name__ == "__main__":
     RANDOM_SEED = 777
     az.style.use("arviz-darkgrid")
@@ -60,12 +61,12 @@ if __name__ == "__main__":
     df['freqVec'] = freqVec
     df['lISI'] = np.log(df.ISI+0.01)
     #Define knots
-    num_knots = 2
-    knot_list = np.quantile(df.lepp, np.linspace(0, 1, num_knots))
+    num_knots = 1
+    knot_list = [-1.4629]#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
     knot_list
     #Setup Patsy B-Matrix for Splines
     B = dmatrix(
-        "bs(lepp, knots=knots, degree=3, include_intercept=True) - 1",
+        "bs(lepp, knots=knots, degree=1, include_intercept=True) - 1",
         {"lepp": df.lepp.values, "knots": knot_list[1:-1]},
     )
     B
@@ -86,7 +87,7 @@ if __name__ == "__main__":
 
     #Setup regression model
     COORDS = {"splines": np.arange(B.shape[1])}
-    pdb.set_trace()
+
     with pm.Model(coords=COORDS) as spline_model:
         a = pm.Normal("a", 0, 1)
         w = pm.Normal("w", mu=0, sigma=3, size=B.shape[1], dims="splines")
@@ -99,7 +100,7 @@ if __name__ == "__main__":
         idata.extend(pm.sample(draws=1000, tune=1000, random_seed=RANDOM_SEED, chains=2,target_accept=0.95,nuts_sampler='numpyro'))
         pm.sample_posterior_predictive(idata, extend_inferencedata=True)
     
-    pdb.set_trace()
+    
     wp = idata.posterior["w"].mean(("chain", "draw")).values
 
     spline_df = (
@@ -126,9 +127,22 @@ if __name__ == "__main__":
     for knot in knot_list:
         plt.gca().axvline(knot, color="grey", alpha=0.4)
     
-    post_pred = az.summary(idata, var_names=["mu"]).reset_index(drop=True)
+    def median_sd(x):
+        median = np.percentile(x, 50)
+        sd = np.sqrt(np.mean((x-median)**2))
+        return sd
+    func_dict = {
+        "std": np.std,
+        "median_std": median_sd,
+        "hdi_5%": lambda x: np.percentile(x, 5),
+        "median": lambda x: np.percentile(x, 50),
+        "hdi_95%": lambda x: np.percentile(x, 95),
+        #"mode":    lambda x: stats.mode(x)
+    }
+    
+    post_pred = az.summary(idata, var_names=["mu"],stat_funcs=func_dict).reset_index(drop=True)
     Band_data_post = df.copy().reset_index(drop=True)
-    Band_data_post["pred_mean"] = post_pred["mode"]
+    Band_data_post["pred_mean"] = post_pred["mean"]
     Band_data_post["pred_hdi_lower"] = post_pred["hdi_5%"]
     Band_data_post["pred_hdi_upper"] = post_pred["hdi_95%"]
 
@@ -140,10 +154,11 @@ if __name__ == "__main__":
     title="BetaCoherence data with posterior predictions",
     ylabel="Coherence",
     )
+    pdb.set_trace()
     for knot in knot_list:
         plt.gca().axvline(knot, color="grey", alpha=0.4)
 
-    Band_data_post.plot("year", "pred_mean", ax=plt.gca(), lw=3, color="firebrick")
+    Band_data_post.plot("lepp", "pred_mean", ax=plt.gca(), lw=3, color="firebrick")
     plt.fill_between(
         Band_data_post.lepp,
         Band_data_post.pred_hdi_lower,
