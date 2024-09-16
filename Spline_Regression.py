@@ -62,7 +62,7 @@ if __name__ == "__main__":
     df['lISI'] = np.log(df.ISI+0.01)
     #Define knots
     num_knots = 1
-    knot_list = [-1.4629]#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
+    knot_list = [-1.4627]#[-1.4629]#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
     knot_list
     #Setup Patsy B-Matrix for Splines
     B = dmatrix(
@@ -90,14 +90,15 @@ if __name__ == "__main__":
 
     with pm.Model(coords=COORDS) as spline_model:
         a = pm.Normal("a", 0, 1)
-        w = pm.Normal("w", mu=0, sigma=3, size=B.shape[1], dims="splines")
+        w = pm.Normal("w", mu=0, sigma=1, size=B.shape[1], dims="splines")
         mu = pm.Deterministic("mu", a + pm.math.dot(np.asarray(B, order="F"), w.T))
         sigma = pm.Exponential("sigma", 1)
-        D = pm.Normal("D", mu=mu, sigma=sigma, observed=df.betaCoh)
+        nu = pm.HalfCauchy("nu",1)
+        D = pm.StudentT("D", mu=mu,nu=nu, sigma=sigma, observed=df.lgCoh)
 
     with spline_model:
         idata = pm.sample_prior_predictive()
-        idata.extend(pm.sample(draws=1000, tune=1000, random_seed=RANDOM_SEED, chains=2,target_accept=0.95,nuts_sampler='numpyro'))
+        idata.extend(pm.sample(draws=1500, tune=500, random_seed=RANDOM_SEED, chains=2,target_accept=0.95,nuts_sampler='numpyro'))
         pm.sample_posterior_predictive(idata, extend_inferencedata=True)
     
     
@@ -148,13 +149,13 @@ if __name__ == "__main__":
 
     df.plot.scatter(
     "lepp",
-    "betaCoh",
+    "lgCoh",
     color="cornflowerblue",
     s=10,
-    title="BetaCoherence data with posterior predictions",
+    title="lgCoherence data with posterior predictions",
     ylabel="Coherence",
     )
-    pdb.set_trace()
+    
     for knot in knot_list:
         plt.gca().axvline(knot, color="grey", alpha=0.4)
 
@@ -166,5 +167,7 @@ if __name__ == "__main__":
         color="firebrick",
         alpha=0.4,
     )
+    pm.plot_posterior(idata.posterior["w"], point_estimate='mode',hdi_prob=0.95)
+    pm.plot_posterior(idata.posterior["a"], point_estimate='mode',hdi_prob=0.95)
     plt.show()
     pdb.set_trace()
