@@ -60,6 +60,7 @@ if __name__ == "__main__":
     df['hgCoh'] = hgCoh
     df['freqVec'] = freqVec
     df['lISI'] = np.log(df.ISI+0.01)
+    pdb.set_trace()
     #Define knots
     num_knots = 1
     knot_list = [-1.4629]#[-1.8489] for LG#[-1.4629]for beta#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
@@ -150,7 +151,7 @@ if __name__ == "__main__":
 
     df.plot.scatter(
     "lepp",
-    "lgCoh",
+    "betaCoh",
     color="cornflowerblue",
     s=10,
     title="lgCoherence data with posterior predictions",
