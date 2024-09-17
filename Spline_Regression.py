@@ -62,7 +62,7 @@ if __name__ == "__main__":
     df['lISI'] = np.log(df.ISI+0.01)
     #Define knots
     num_knots = 1
-    knot_list = [-1.4627]#[-1.4629]#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
+    knot_list = [-1.4629]#[-1.8489] for LG#[-1.4629]for beta#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
     knot_list
     #Setup Patsy B-Matrix for Splines
     B = dmatrix(
@@ -89,16 +89,17 @@ if __name__ == "__main__":
     COORDS = {"splines": np.arange(B.shape[1])}
 
     with pm.Model(coords=COORDS) as spline_model:
-        a = pm.Normal("a", 0, 1)
-        w = pm.Normal("w", mu=0, sigma=1, size=B.shape[1], dims="splines")
+        a = pm.Normal("a", 0, 0.25)
+        w = pm.Normal("w", mu=0, sigma=0.5, size=B.shape[1], dims="splines")
         mu = pm.Deterministic("mu", a + pm.math.dot(np.asarray(B, order="F"), w.T))
-        sigma = pm.Exponential("sigma", 1)
-        nu = pm.HalfCauchy("nu",1)
-        D = pm.StudentT("D", mu=mu,nu=nu, sigma=sigma, observed=df.lgCoh)
+        sigma = pm.Exponential("sigma", 0.5)
+        #sku = pm.HalfCauchy("sku",5)
+        nu = pm.HalfCauchy("nu",5)
+        D = pm.StudentT("D", mu=mu,nu=nu,sigma=sigma, observed=df.betaCoh)
 
     with spline_model:
         idata = pm.sample_prior_predictive()
-        idata.extend(pm.sample(draws=1500, tune=500, random_seed=RANDOM_SEED, chains=2,target_accept=0.95,nuts_sampler='numpyro'))
+        idata.extend(pm.sample(draws=1500, tune=500, random_seed=RANDOM_SEED, chains=2,target_accept=0.99,nuts_sampler='numpyro'))
         pm.sample_posterior_predictive(idata, extend_inferencedata=True)
     
     
@@ -170,4 +171,17 @@ if __name__ == "__main__":
     pm.plot_posterior(idata.posterior["w"], point_estimate='mode',hdi_prob=0.95)
     pm.plot_posterior(idata.posterior["a"], point_estimate='mode',hdi_prob=0.95)
     plt.show()
+    
+
+    
+    import scipy.stats
+
+    def mean_confidence_interval(data, confidence=0.95):
+        a = 1.0 * np.array(data)
+        n = len(a)
+        m, se = np.mean(a), scipy.stats.sem(a)
+        h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+        mode = scipy.stats.mode(data)
+        return m,mode, m-h, m+h
+    
     pdb.set_trace()
