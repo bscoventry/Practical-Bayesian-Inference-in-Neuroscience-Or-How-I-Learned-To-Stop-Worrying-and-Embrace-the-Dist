@@ -60,10 +60,10 @@ if __name__ == "__main__":
     df['hgCoh'] = hgCoh
     df['freqVec'] = freqVec
     df['lISI'] = np.log(df.ISI+0.01)
-    pdb.set_trace()
+    
     #Define knots
     num_knots = 1
-    knot_list = [-1.4629]#[-1.8489] for LG#[-1.4629]for beta#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
+    knot_list = [-2]#[-1.8489] for LG#[-1.4629]for beta#np.quantile(df.lepp, np.linspace(0, 1, num_knots))
     knot_list
     #Setup Patsy B-Matrix for Splines
     B = dmatrix(
@@ -152,37 +152,37 @@ if __name__ == "__main__":
     df.plot.scatter(
     "lepp",
     "betaCoh",
-    color="cornflowerblue",
-    s=10,
-    title="lgCoherence data with posterior predictions",
     ylabel="Coherence",
     )
     
     for knot in knot_list:
-        plt.gca().axvline(knot, color="grey", alpha=0.4)
-
-    Band_data_post.plot("lepp", "pred_mean", ax=plt.gca(), lw=3, color="firebrick")
-    plt.fill_between(
-        Band_data_post.lepp,
-        Band_data_post.pred_hdi_lower,
-        Band_data_post.pred_hdi_upper,
-        color="firebrick",
-        alpha=0.4,
-    )
-    pm.plot_posterior(idata.posterior["w"], point_estimate='mode',hdi_prob=0.95)
-    pm.plot_posterior(idata.posterior["a"], point_estimate='mode',hdi_prob=0.95)
+        plt.gca().axvline(knot, color="grey")
+    plt.plot(Band_data_post.lepp,Band_data_post.pred_mean,color='firebrick')
+    plt.plot(Band_data_post.lepp,Band_data_post.pred_hdi_lower,color='firebrick')
+    plt.plot(Band_data_post.lepp,Band_data_post.pred_hdi_upper,color='firebrick')
+    #Band_data_post.plot("lepp", "pred_mean", ax=plt.gca(), lw=3, color="firebrick")
+    #plt.fill_between(
+        #Band_data_post.lepp,
+        #Band_data_post.pred_hdi_lower,
+        #Band_data_post.pred_hdi_upper,
+        #color="firebrick",
+        #alpha=0.4,
+    #)
+    #pm.plot_posterior(idata.posterior["w"], point_estimate='mode',hdi_prob=0.95)
+    #pm.plot_posterior(idata.posterior["a"], point_estimate='mode',hdi_prob=0.95)
     plt.show()
     
 
     
     import scipy.stats
 
-    def mean_confidence_interval(data, confidence=0.95):
-        a = 1.0 * np.array(data)
-        n = len(a)
-        m, se = np.mean(a), scipy.stats.sem(a)
-        h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+    def Credible_Interval(data, confidence=0.95):
         mode = scipy.stats.mode(data)
-        return m,mode, m-h, m+h
+        ci = az.hdi(data,hdi_prob=confidence)
+        ci_low = ci[0]
+        ci_high = ci[1]
+        return mode, ci_low, ci_high
     
+    
+
     pdb.set_trace()
