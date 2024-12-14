@@ -60,3 +60,10 @@ Data for Bayesian Multilinear regressions can be found at its papers open scienc
 # Batch Processing
 For an example of running models in batches, see batch_BHLR.py which does a sensitivity sweep. To keep things simple, this is a simple loop function. More fancy MPI based processes can be done. However,
 this would take a good amount of work to work between threads already used by PyMC. This should run plenty fast as is.
+
+# Potential Errors
+A common error currently installing pymc is a 'distutils not found' error. This is because distutils was moved for Python >= 3.12. A way to fix this is
+```
+conda install "setuptools <65"
+```
+in the anaconda environment.
